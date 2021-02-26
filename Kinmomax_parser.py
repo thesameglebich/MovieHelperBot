@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-URL = "https://kinomax.tomsk.ru/"
+URL = "https://kinomax.tomsk.ru/affiche/"
 HEADERS = {
     'user-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36",
     'accept': "*/*"}
@@ -13,7 +13,7 @@ def get_html(url, params=None):
 
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
-    items = soup.find_all('div', class_='tilte')
+    items = soup.find_all('div', class_='film-title')
     films = []
     for item in items:
         films.append(
