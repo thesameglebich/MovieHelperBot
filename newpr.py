@@ -11,6 +11,7 @@ from telegram import InlineKeyboardButton
 from telegram import InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
 from telegram.ext import CallbackQueryHandler
+from Kinmomax_parser import parse
 
 button_help = 'help'
 button_location = 'location'
@@ -47,8 +48,12 @@ def keyboard_callback_handler(update: Update, context:CallbackContext):
     chat_id = update.effective_message.chat_id
     if data == KinoMaxButton:
         #update.callback_query.message. тут надо отредачить фото
+        myfilms = parse()
+        listoffilms = ""
+        for i in range(len(myfilms)):
+            listoffilms += myfilms[i]['title'] + myfilms[i]['rating'] + "\n"
         query.message.reply_text(
-            text="Empty List of Kinomax",
+            text=listoffilms
         )
     elif data == GoodwinButton:
         update.callback_query.edit_message_text(
