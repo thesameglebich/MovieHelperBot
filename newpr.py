@@ -29,6 +29,7 @@ Titles = {
     Exit: "Exit",
 }
 
+
 def get_inline_keyboard_cinema():
     keyboard = [
         [
@@ -41,13 +42,14 @@ def get_inline_keyboard_cinema():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-def keyboard_callback_handler(update: Update, context:CallbackContext):
+
+def keyboard_callback_handler(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
     curr_text = update.effective_message.text
     chat_id = update.effective_message.chat_id
     if data == KinoMaxButton:
-        #update.callback_query.message. тут надо отредачить фото
+        # update.callback_query.message. тут надо отредачить фото
         myfilms = parse()
         listoffilms = ""
         for i in range(len(myfilms)):
@@ -74,8 +76,7 @@ def keyboard_callback_handler(update: Update, context:CallbackContext):
         )
 
 
-
-def button_location_handler(update:Update, context:CallbackContext):
+def button_location_handler(update: Update, context: CallbackContext):
     update.message.reply_text(
         text=update.message.location.longitude
     )
@@ -118,7 +119,8 @@ def greeting(update: Update, context: CallbackContext):
         """
     )
 
-def start(update:Update, context:CallbackContext):
+
+def start(update: Update, context: CallbackContext):
     update.message.reply_photo(
         photo="https://kinomax.tomsk.ru/upload/gallery/image_orig_89_1845.jpg",
         caption="Выберите кинотеатр",
@@ -126,20 +128,18 @@ def start(update:Update, context:CallbackContext):
     )
 
 
-
 def main():
-
     updater = Updater(
         token='1673692535:AAHtigUE_yZ8xI39LhnGcreyjrurXFchNkM',
         use_context=True,
     )
 
-    #updater.dispatcher.add_handler(MessageHandler(filters=Filters.text, callback=message_handler))
+    # updater.dispatcher.add_handler(MessageHandler(filters=Filters.text, callback=message_handler))
     updater.dispatcher.add_handler(CommandHandler("start", start))
     updater.dispatcher.add_handler(CommandHandler("helppls", greeting))
     buttons_handler = CallbackQueryHandler(callback=keyboard_callback_handler, pass_chat_data=True)
     updater.dispatcher.add_handler(buttons_handler)
-    #updater.dispatcher.add_handler(CommandHandler("help"))
+    # updater.dispatcher.add_handler(CommandHandler("help"))
     updater.start_polling()
     updater.idle()
 
