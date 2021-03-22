@@ -18,17 +18,18 @@ def get_html(url, params=None):
 
 # second parser for second variant of page
 def get_content2(html):
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, 'html.parser')
     item = soup.find_all('div', class_='styles_subRating__VEOSH film-sub-rating')[0]
-    print(item)
+    #print(item)
     # print(item.get_text())
+    return item.get_text()
 
 
 def parse2(newlink):
     html = get_html(newlink)
     if html.status_code == 200:
-        print(html.text)
-        # get_content2(html.text)
+        #print(html.text)
+        get_content2(html.text)
     else:
         print('Error')
 
@@ -43,13 +44,13 @@ def get_content(html):
         if item.find('div', class_='rating'):
             return item.find('div', class_='rating').get_text()
         else:
-            return 'я пока хз как фиксить'
+            #return 'я пока хз как фиксить'
             print('here')
             link = item.find('ul', class_='links').find_next('li').find_next('a').get('href')
             filmindex = link.split('/')[2]
             newlink = URL2 + filmindex + '/'
             print(newlink)
-            parse2(newlink)
+            return parse2(newlink)
     else:
         return 'error'
 
