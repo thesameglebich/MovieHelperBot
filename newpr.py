@@ -12,6 +12,7 @@ from telegram import InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
 from telegram.ext import CallbackQueryHandler
 from Kinmomax_parser import parse
+from Goodwin import parseGoodwin
 
 button_help = 'help'
 button_location = 'location'
@@ -49,21 +50,32 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
     curr_text = update.effective_message.text
     chat_id = update.effective_message.chat_id
     if data == KinoMaxButton:
+        query.message.reply_text(
+            text="Пожалуйста подождите, мы уже загружаем все фильмы Киномакса"
+        )
         # update.callback_query.message. тут надо отредачить фото
         myfilms = parse()
         listoffilms = ""
         for i in range(len(myfilms)):
+            if myfilms[i]['title'] is None or myfilms[i]['rating'] is None:
+                continue
             listoffilms += myfilms[i]['title'] + myfilms[i]['rating'] + "\n"
         query.message.reply_text(
             text=listoffilms
         )
     elif data == GoodwinButton:
-        update.callback_query.edit_message_text(
-            text=curr_text,
-            parse_mode=ParseMode.MARKDOWN,
-        )
         query.message.reply_text(
-            text="Empty List of Goodwin",
+            text="Пожалуйста подождите, мы уже загружаем все фильмы Гудвина"
+        )
+        goodwinfilms = parseGoodwin()
+        listforfoodwin = ""
+        for i in range(len(goodwinfilms)):
+            if goodwinfilms[i]['title'] is None or goodwinfilms[i]['rating'] is None:
+                continue
+            listforfoodwin += goodwinfilms[i]['title'] + " " + goodwinfilms[i]['rating'] + "\n"
+
+        query.message.reply_text(
+            text=listforfoodwin
         )
 
     elif data == Exit:

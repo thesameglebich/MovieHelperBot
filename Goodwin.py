@@ -21,12 +21,10 @@ def get_content(html):
         films.append(
             {
                 'title': item.find('a').get_text(strip=True),
-                #'rating': parse_rating(item.find('a').get_text(strip=True))
+                'rating': parse_rating(item.find('a').get_text(strip=True))
             }
         )
         #films[:-1]['rating'] = parse_rating(films[:-1]['title'])
-    print(films)
-    print(len(films))
     return films
 
 
@@ -37,4 +35,3 @@ def parseGoodwin():
     else:
         print('Error')
 
-parseGoodwin()

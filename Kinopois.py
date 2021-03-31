@@ -19,10 +19,12 @@ def get_html(url, params=None):
 # second parser for second variant of page
 def get_content2(html):
     soup = BeautifulSoup(html, 'html.parser')
-    item = soup.find_all('div', class_='styles_subRating__VEOSH film-sub-rating')[0]
+    item = soup.find_all('div', class_='styles_subRating__VEOSH film-sub-rating')
+    if item:
+        return item[0].get_text()
     #print(item)
     # print(item.get_text())
-    return item.get_text()
+    return "none"
 
 
 def parse2(newlink):
