@@ -18,20 +18,26 @@ def get_html(url, params=None):
 
 # second parser for second variant of page
 def get_content2(html):
+    print(html)
+    print("iam here 2")
     soup = BeautifulSoup(html, 'html.parser')
-    item = soup.find_all('div', class_='styles_subRating__VEOSH film-sub-rating')
+    item = soup.find_all('span', class_='styles_valueSection__19woS')
+    print(item)
     if item:
+        print("iam gere 3")
         return item[0].get_text()
     #print(item)
     # print(item.get_text())
-    return "none"
+    print("i am here 4")
+    return "0"
 
 
 def parse2(newlink):
+    print("iam here1")
     html = get_html(newlink)
     if html.status_code == 200:
         #print(html.text)
-        get_content2(html.text)
+        return get_content2(html.text)
     else:
         print('Error')
 
@@ -54,7 +60,7 @@ def get_content(html):
             print(newlink)
             return parse2(newlink)
     else:
-        return 'error'
+        return '0'
 
 
 def parse_rating(name):
@@ -80,3 +86,4 @@ def search_film(name):
 #mystr = "Норм и несокрушимые: Семейные каникулы (6+)"
 #chtop comit new
 #parse(mystr)
+#print(parse_rating("Ученик экзорциста (18+)"))
