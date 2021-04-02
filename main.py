@@ -50,6 +50,10 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
     curr_text = update.effective_message.text
     chat_id = update.effective_message.chat_id
     if data == KinoMaxButton:
+        update.callback_query.edit_message_caption(
+            caption="Выберите кинотеатр",
+            parse_mode=ParseMode.MARKDOWN
+        )
         query.message.reply_text(
             text="Пожалуйста подождите, мы уже загружаем все фильмы Киномакса"
         )
@@ -64,9 +68,15 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
                 myfilms[i]['rating'] = "б/р"
             listoffilms += myfilms[i]['title'] + myfilms[i]['rating'] + "\n"
         query.message.reply_text(
-            text=listoffilms
+            text=listoffilms,
+            reply_markup=get_inline_keyboard_cinema()
         )
+
     elif data == GoodwinButton:
+        update.callback_query.edit_message_caption(
+            caption="Выберите кинотеатр",
+            parse_mode=ParseMode.MARKDOWN
+        )
         query.message.reply_text(
             text="Пожалуйста подождите, мы уже загружаем все фильмы Гудвина"
         )
@@ -82,12 +92,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
             listforfoodwin += goodwinfilms[i]['title'] + " " + goodwinfilms[i]['rating'] + "\n"
 
         query.message.reply_text(
-            text=listforfoodwin
+            text=listforfoodwin,
+            reply_markup=get_inline_keyboard_cinema()
         )
 
     elif data == Exit:
-        update.callback_query.edit_message_text(
-            text=curr_text,
+        update.callback_query.edit_message_caption(
+            caption="ВЫберите кинотеатр",
             parse_mode=ParseMode.MARKDOWN
         )
         query.message.reply_text(
