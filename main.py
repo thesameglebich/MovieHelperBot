@@ -59,8 +59,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
         )
         # update.callback_query.message. тут надо отредачить фото
         myfilms = parse()
+        for i in range(len(myfilms)):
+            checkimdb = myfilms[i]['rating']
+            if checkimdb[0] == "I":
+                checkimdb = checkimdb.split()
+                myfilms[i]['rating'] = checkimdb[1]
         myfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
-        listoffilms = ""
+        listoffilms = "КИНОМАКС\n"
         for i in range(len(myfilms)):
             if myfilms[i]['title'] is None or myfilms[i]['rating'] is None:
                 continue
@@ -69,7 +74,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
             listoffilms += myfilms[i]['title'] + myfilms[i]['rating'] + "\n"
         query.message.reply_text(
             text=listoffilms,
-            reply_markup=get_inline_keyboard_cinema()
+            #reply_markup=get_inline_keyboard_cinema()
         )
 
     elif data == GoodwinButton:
@@ -81,8 +86,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
             text="Пожалуйста подождите, мы уже загружаем все фильмы Гудвина"
         )
         goodwinfilms = parseGoodwin()
+        for i in range(len(goodwinfilms)):
+            checkimdb = goodwinfilms[i]['rating']
+            if checkimdb[0] == "I":
+                checkimdb = checkimdb.split()
+                goodwinfilms[i]['rating'] = checkimdb[1]
         goodwinfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
-        listforfoodwin = ""
+        listforfoodwin = "ГУДВИН\n"
         for i in range(len(goodwinfilms)):
             if goodwinfilms[i]['title'] is None or goodwinfilms[i]['rating'] is None:
                 print(goodwinfilms[i]['title'])
@@ -93,14 +103,11 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 
         query.message.reply_text(
             text=listforfoodwin,
-            reply_markup=get_inline_keyboard_cinema()
+            #reply_markup=get_inline_keyboard_cinema()
         )
 
     elif data == Exit:
-        update.callback_query.edit_message_caption(
-            caption="ВЫберите кинотеатр",
-            parse_mode=ParseMode.MARKDOWN
-        )
+
         query.message.reply_text(
             text="By, Send me some money to my number",
         )
