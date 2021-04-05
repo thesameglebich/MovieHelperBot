@@ -19,24 +19,17 @@ def get_html(url, params=None):
 # second parser for second variant of page
 def get_content2(html):
     print(html)
-    print("iam here 2")
     soup = BeautifulSoup(html, 'html.parser')
     item = soup.find_all('span', class_='styles_valueSection__19woS')
     print(item)
     if item:
-        print("iam gere 3")
         return item[0].get_text()
-    #print(item)
-    # print(item.get_text())
-    print("i am here 4")
     return "0"
 
 
 def parse2(newlink):
-    print("iam here1")
     html = get_html(newlink)
     if html.status_code == 200:
-        #print(html.text)
         return get_content2(html.text)
     else:
         print('Error')
@@ -52,8 +45,6 @@ def get_content(html):
         if item.find('div', class_='rating'):
             return item.find('div', class_='rating').get_text()
         else:
-            #return 'я пока хз как фиксить'
-            print('here')
             link = item.find('ul', class_='links').find_next('li').find_next('a').get('href')
             filmindex = link.split('/')[2]
             newlink = URL2 + filmindex + '/'
