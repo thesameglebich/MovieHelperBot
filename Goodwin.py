@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from Kinopois import parse_rating
+from YouTube import findlink
 
 URL = "https://goodwincinema.ru/affiche/"
 HEADERS = {
@@ -18,10 +19,12 @@ def get_content(html):
     items = soup.find_all('div', class_='film-title')
     films = []
     for item in items:
+        filmname = item.find('a').get_text(strip=True)
         films.append(
             {
-                'title': item.find('a').get_text(strip=True),
-                'rating': parse_rating(item.find('a').get_text(strip=True))
+                'title': filmname,
+                'rating': parse_rating(filmname),
+                'link': findlink(filmname)
             }
         )
         #films[:-1]['rating'] = parse_rating(films[:-1]['title'])

@@ -102,10 +102,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
                 continue
             if goodwinfilms[i]['rating'] == "0":
                 goodwinfilms[i]['rating'] = "б/р"
-            listforfoodwin += goodwinfilms[i]['title'] + " " + goodwinfilms[i]['rating'] + "\n"
+            listforfoodwin += "[" + goodwinfilms[i]['title'] + "]" + "(" + goodwinfilms[i]['link'] + ")" + " " + \
+                           goodwinfilms[i]['rating'] + "\n"
 
         query.message.reply_text(
             text=listforfoodwin,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True
             #reply_markup=get_inline_keyboard_cinema()
         )
 
