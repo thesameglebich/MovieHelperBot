@@ -71,7 +71,8 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
                 continue
             if myfilms[i]['rating'] == "0":
                 myfilms[i]['rating'] = "б/р"
-            listoffilms += "[" + myfilms[i]['title'] + "]" + "(https://www.youtube.com/channel/UCAlRksF5338XmSMbwS3W7eA) " + myfilms[i]['rating'] + "\n"
+            listoffilms += "[" + myfilms[i]['title'] + "]" + "(" + myfilms[i]['link'] + ")" + " " + \
+                           myfilms[i]['rating'] + "\n"
         query.message.reply_text(
             text=listoffilms,
             parse_mode=ParseMode.MARKDOWN,
@@ -101,10 +102,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
                 continue
             if goodwinfilms[i]['rating'] == "0":
                 goodwinfilms[i]['rating'] = "б/р"
-            listforfoodwin += goodwinfilms[i]['title'] + " " + goodwinfilms[i]['rating'] + "\n"
+            listforfoodwin += "[" + goodwinfilms[i]['title'] + "]" + "(" + goodwinfilms[i]['link'] + ")" + " " + \
+                           goodwinfilms[i]['rating'] + "\n"
 
         query.message.reply_text(
             text=listforfoodwin,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True
             #reply_markup=get_inline_keyboard_cinema()
         )
 

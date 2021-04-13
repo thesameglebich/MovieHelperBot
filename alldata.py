@@ -4,11 +4,12 @@ from Goodwin import parseGoodwin
 from YouTube import findlink
 import sqlite3
 
+
 def update_data_base():
     with sqlite3.connect('filmlist.db') as conn:
         init_db(conn=conn, force=True)
     kinomaxmas = kinomaxparse()
-    #goodwinmas = parseGoodwin()
+    goodwinmas = parseGoodwin()
     for i in range(len(kinomaxmas)):
         name = kinomaxmas[i]['title']
         rating = kinomaxmas[i]['rating']
@@ -20,4 +21,13 @@ def update_data_base():
                      rating=rating,
                      link=link)
 
-update_data_base()
+    for i in range(len(goodwinmas)):
+        name = goodwinmas[i]['title']
+        rating = goodwinmas[i]['rating']
+        link = findlink(name)
+        with sqlite3.connect('filmlist.db') as conn:
+            add_film(conn=conn,
+                     cinema_id=2,
+                     name=name,
+                     rating=rating,
+                     link=link)
