@@ -13,6 +13,9 @@ from telegram.ext import ConversationHandler
 from telegram.ext import CallbackQueryHandler
 from Kinmomax_parser import parse
 from Goodwin import parseGoodwin
+from alldata import update_data_base
+from db import get_list_of_films
+import sqlite3
 
 button_help = 'help'
 button_location = 'location'
@@ -58,13 +61,14 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
             text="Пожалуйста подождите, мы уже загружаем все фильмы Киномакса"
         )
         # update.callback_query.message. тут надо отредачить фото
-        myfilms = parse()
+        with sqlite3.connect('filmlist.db') as conn:
+            myfilms = get_list_of_films(conn=conn, cinema_id=1)
         for i in range(len(myfilms)):
             checkimdb = myfilms[i]['rating']
             if checkimdb[0] == "I":
                 checkimdb = checkimdb.split()
                 myfilms[i]['rating'] = checkimdb[1]
-        myfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
+        #myfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
         listoffilms = "КИНОМАКС\n"
         for i in range(len(myfilms)):
             if myfilms[i]['title'] is None or myfilms[i]['rating'] is None:
@@ -88,13 +92,14 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
         query.message.reply_text(
             text="Пожалуйста подождите, мы уже загружаем все фильмы Гудвина"
         )
-        goodwinfilms = parseGoodwin()
+        with sqlite3.connect('filmlist.db') as conn:
+            goodwinfilms = get_list_of_films(conn=conn, cinema_id=2)
         for i in range(len(goodwinfilms)):
             checkimdb = goodwinfilms[i]['rating']
             if checkimdb[0] == "I":
                 checkimdb = checkimdb.split()
                 goodwinfilms[i]['rating'] = checkimdb[1]
-        goodwinfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
+        #goodwinfilms.sort(key=lambda dictionary: dictionary['rating'], reverse=True)
         listforfoodwin = "ГУДВИН\n"
         for i in range(len(goodwinfilms)):
             if goodwinfilms[i]['title'] is None or goodwinfilms[i]['rating'] is None:
@@ -176,6 +181,7 @@ def main():
         token='1673692535:AAHtigUE_yZ8xI39LhnGcreyjrurXFchNkM',
         use_context=True,
     )
+    update_data_base()
 
     # updater.dispatcher.add_handler(MessageHandler(filters=Filters.text, callback=message_handler))
     updater.dispatcher.add_handler(CommandHandler("start", start))

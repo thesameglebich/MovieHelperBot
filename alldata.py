@@ -13,7 +13,7 @@ def update_data_base():
     for i in range(len(kinomaxmas)):
         name = kinomaxmas[i]['title']
         rating = kinomaxmas[i]['rating']
-        link = findlink(name)
+        link = kinomaxmas[i]['link']
         with sqlite3.connect('filmlist.db') as conn:
             add_film(conn=conn,
                      cinema_id=1,
@@ -24,7 +24,7 @@ def update_data_base():
     for i in range(len(goodwinmas)):
         name = goodwinmas[i]['title']
         rating = goodwinmas[i]['rating']
-        link = findlink(name)
+        link = goodwinmas[i]['link']
         with sqlite3.connect('filmlist.db') as conn:
             add_film(conn=conn,
                      cinema_id=2,
