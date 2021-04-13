@@ -71,7 +71,8 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
                 continue
             if myfilms[i]['rating'] == "0":
                 myfilms[i]['rating'] = "б/р"
-            listoffilms += "[" + myfilms[i]['title'] + "]" + "(https://www.youtube.com/channel/UCAlRksF5338XmSMbwS3W7eA) " + myfilms[i]['rating'] + "\n"
+            listoffilms += "[" + myfilms[i]['title'] + "]" + "(" + myfilms[i]['link'] + ")" + " " + \
+                           myfilms[i]['rating'] + "\n"
         query.message.reply_text(
             text=listoffilms,
             parse_mode=ParseMode.MARKDOWN,

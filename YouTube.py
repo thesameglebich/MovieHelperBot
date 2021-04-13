@@ -14,4 +14,3 @@ def findlink(name):
     finallink = copy(watchURL) + match[0]
     return finallink
 
-findlink("майор гром")
