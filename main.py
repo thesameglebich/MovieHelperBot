@@ -16,6 +16,7 @@ from Goodwin import parseGoodwin
 from alldata import update_data_base
 from db import get_list_of_films
 import sqlite3
+import datetime, pytz
 
 button_help = 'help'
 button_location = 'location'
@@ -33,6 +34,7 @@ Titles = {
     Exit: "Exit",
 }
 
+showlist = False
 
 def get_inline_keyboard_cinema():
     keyboard = [
@@ -52,6 +54,8 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
     data = query.data
     curr_text = update.effective_message.text
     chat_id = update.effective_message.chat_id
+    global showlist
+    showlist = True
     if data == KinoMaxButton:
         update.callback_query.edit_message_caption(
             caption="Выберите кинотеатр",
@@ -143,6 +147,8 @@ def message_handler(update: Update, context: CallbackContext):
         return button_help_handler(update=update, context=context)
     if text.lower() == button_location:
         return button_location_handler(update=update, context=context)
+    if text.isnumeric():
+        return choosefilm(update=update, context=context, number=text)
 
     reply_markup = ReplyKeyboardMarkup(
         keyboard=[
@@ -174,18 +180,31 @@ def start(update: Update, context: CallbackContext):
         caption="Выберите кинотеатр",
         reply_markup=get_inline_keyboard_cinema(),
     )
+def choosefilm(update: Update, context: CallbackContext, number):
+    with sqlite3.connect('filmlist.db') as conn:
+        all_films = get_list_of_films(conn=conn, cinema_id=2)
 
+    update.message.reply_text(
+        text=all_films[int(number)]['title'],
+    )
+
+
+def change_data_in_db(update: Update, context: CallbackContext):
+    context.job_queue.run_daily(update_data_base, context=update.message.chat_id, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(hour=3, minute=8, tzinfo=pytz.timezone('Europe/Moscow')))
 
 def main():
     updater = Updater(
         token='1673692535:AAHtigUE_yZ8xI39LhnGcreyjrurXFchNkM',
         use_context=True,
     )
-    update_data_base()
+    #update_data_base()
 
-    # updater.dispatcher.add_handler(MessageHandler(filters=Filters.text, callback=message_handler))
+    #conv_handler = ConversationHandler()
+
+    updater.dispatcher.add_handler(MessageHandler(filters=Filters.text, callback=message_handler))
     updater.dispatcher.add_handler(CommandHandler("start", start))
     updater.dispatcher.add_handler(CommandHandler("helppls", greeting))
+    updater.dispatcher.add_handler(CommandHandler("change_data_in_db", change_data_in_db, pass_job_queue=True))
     buttons_handler = CallbackQueryHandler(callback=keyboard_callback_handler, pass_chat_data=True)
     updater.dispatcher.add_handler(buttons_handler)
     # updater.dispatcher.add_handler(CommandHandler("help"))
@@ -195,3 +214,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
