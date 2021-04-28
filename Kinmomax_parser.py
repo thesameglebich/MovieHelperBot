@@ -27,7 +27,7 @@ def get_content(html):
                 'title': filmname,
                 'rating': parse_rating(filmname),
                 'link': findlink(filmname),
-                'description': descriprions[counter]
+                'description': descriprions[counter].get_text(strip=True)
             }
         )
         counter += 1
@@ -41,3 +41,7 @@ def parse():
         return get_content(html.text)
     else:
         print('Error')
+
+#result = parse()
+
+#print(result[0]['description'])

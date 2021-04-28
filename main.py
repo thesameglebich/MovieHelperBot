@@ -34,7 +34,8 @@ Titles = {
     Exit: "Exit",
 }
 
-showlist = False
+showlistK = False
+showlistG = False
 
 def get_inline_keyboard_cinema():
     keyboard = [
@@ -54,9 +55,11 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
     data = query.data
     curr_text = update.effective_message.text
     chat_id = update.effective_message.chat_id
-    global showlist
-    showlist = True
+    global showlistK
+    global showlistG
     if data == KinoMaxButton:
+        showlistK = True
+        showlistG = False
         update.callback_query.edit_message_caption(
             caption="Выберите кинотеатр",
             parse_mode=ParseMode.MARKDOWN
@@ -67,6 +70,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
         # update.callback_query.message. тут надо отредачить фото
         with sqlite3.connect('filmlist.db') as conn:
             myfilms = get_list_of_films(conn=conn, cinema_id=1)
+        print(myfilms)
         for i in range(len(myfilms)):
             checkimdb = myfilms[i]['rating']
             if checkimdb[0] == "I":
@@ -89,6 +93,8 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
         )
 
     elif data == GoodwinButton:
+        showlistK = False
+        showlistG = True
         update.callback_query.edit_message_caption(
             caption="Выберите кинотеатр",
             parse_mode=ParseMode.MARKDOWN
@@ -143,10 +149,11 @@ def button_help_handler(update: Update, context: CallbackContext):
 
 def message_handler(update: Update, context: CallbackContext):
     text = update.message.text
-    if text == button_help:
-        return button_help_handler(update=update, context=context)
-    if text.lower() == button_location:
-        return button_location_handler(update=update, context=context)
+    if text == '/help':
+        return greeting(update=update, context=context)
+    if text.lower() == '/start':
+        #return button_location_handler(update=update, context=context)
+        return start(update=update, context=context)
     if text.isnumeric():
         return choosefilm(update=update, context=context, number=text)
 
@@ -181,12 +188,21 @@ def start(update: Update, context: CallbackContext):
         reply_markup=get_inline_keyboard_cinema(),
     )
 def choosefilm(update: Update, context: CallbackContext, number):
-    with sqlite3.connect('filmlist.db') as conn:
-        all_films = get_list_of_films(conn=conn, cinema_id=2)
 
-    update.message.reply_text(
-        text=all_films[int(number)]['title'],
-    )
+    global showlistG
+    if (showlistG == True):
+        with sqlite3.connect('filmlist.db') as conn:
+            all_films = get_list_of_films(conn=conn, cinema_id=2)
+        update.message.reply_text(
+            text=all_films[int(number)-1]['description'],
+        )
+    global showlistK
+    if(showlistK == True):
+        with sqlite3.connect('filmlist.db') as conn:
+            all_films = get_list_of_films(conn=conn, cinema_id=1)
+        update.message.reply_text(
+            text=all_films[int(number) - 1]['description'],
+        )
 
 
 def change_data_in_db(update: Update, context: CallbackContext):
