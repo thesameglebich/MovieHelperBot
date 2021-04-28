@@ -48,16 +48,17 @@ def init_db(conn, force: bool = False):
        cinema_id    INTEGER NOT NULL,
        name         TEXT NOT NULL,
        rating       TEXT,
-       link         TEXT  
+       link         TEXT,
+       description  Text  
     )
     ''')
     conn.commit()
 
 
-def add_film(conn, cinema_id: int, name: str, rating, link: str):
+def add_film(conn, cinema_id: int, name: str, rating, link: str, description: str):
 
     c = conn.cursor()
-    c.execute('INSERT INTO film (cinema_id, name, rating, link) VALUES (?, ?, ?, ?)', (cinema_id, name, rating, link))
+    c.execute('INSERT INTO film (cinema_id, name, rating, link, description) VALUES (?, ?, ?, ?)', (cinema_id, name, rating, link, description))
     conn.commit()
 
 
