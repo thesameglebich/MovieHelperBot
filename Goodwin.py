@@ -17,16 +17,20 @@ def get_html(url, params=None):
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('div', class_='film-title')
+    descriprions = soup.find_all('div', class_='story')
     films = []
+    counter = 0
     for item in items:
         filmname = item.find('a').get_text(strip=True)
         films.append(
             {
                 'title': filmname,
                 'rating': parse_rating(filmname),
-                'link': findlink(filmname)
+                'link': findlink(filmname),
+                'description': descriprions[counter]
             }
         )
+        counter+=1
         #films[:-1]['rating'] = parse_rating(films[:-1]['title'])
     return films
 
